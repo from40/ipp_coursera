@@ -11,9 +11,25 @@ PAD_WIDTH = 8
 PAD_HEIGHT = 80
 HALF_PAD_WIDTH = PAD_WIDTH / 2
 HALF_PAD_HEIGHT = PAD_HEIGHT / 2
-LEFT = False
-RIGHT = True
+# LEFT = False
+# RIGHT = True
 direction = "RIGHT"
+
+paddle1_pos = [PAD_WIDTH // 2, HEIGHT // 2]
+paddle1_object = [
+                  [0, paddle1_pos[1] - PAD_HEIGHT // 2],
+                  [PAD_WIDTH, paddle1_pos[1] - PAD_HEIGHT // 2],
+                  [PAD_WIDTH, paddle1_pos[1] + PAD_HEIGHT // 2],
+                  [0, paddle1_pos[1] + PAD_HEIGHT // 2]
+                 ]
+
+paddle2_pos = [WIDTH - (PAD_WIDTH // 2), HEIGHT // 2]
+paddle2_object = [
+                  [WIDTH - PAD_WIDTH, paddle2_pos[1] - PAD_HEIGHT // 2],
+                  [WIDTH, paddle2_pos[1] - PAD_HEIGHT // 2],
+                  [WIDTH, paddle2_pos[1] + PAD_HEIGHT // 2],
+                  [WIDTH - PAD_WIDTH, paddle2_pos[1] + PAD_HEIGHT // 2]
+                 ]
 
 
 # initialize ball_pos and ball_vel for new bal in middle of table
@@ -67,6 +83,8 @@ def draw(canvas):
     # update paddle's vertical position, keep paddle on the screen
 
     # draw paddles
+    canvas.draw_polygon(paddle1_object, 1, "white", "white")
+    canvas.draw_polygon(paddle2_object, 1, "white", "white")
 
     # determine whether paddle and ball collide
 
