@@ -27,10 +27,8 @@ def spawn_ball(direction):
         side = 1
     elif direction == "LEFT":
         side = -1
-    ball_vel[0] = random.randrange(3, 6) * side
+    ball_vel[0] = random.randrange(3, 5) * side
     ball_vel[1] = random.randrange(2, 4)
-
-
 
 
 # define event handlers
@@ -38,6 +36,7 @@ def new_game():
     global paddle1_pos, paddle2_pos, paddle1_vel, paddle2_vel  # these are numbers
     global score1, score2  # these are ints
     spawn_ball(direction)
+
 
 def draw(canvas):
     global score1, score2, paddle1_pos, paddle2_pos, ball_pos, ball_vel
@@ -51,9 +50,10 @@ def draw(canvas):
     # update ball
     canvas.draw_circle(ball_pos, BALL_RADIUS, 0.1, "white", "white")
     # reflection horizontally
-    if ((ball_pos[0] - BALL_RADIUS) <= PAD_WIDTH) or \
-       ((ball_pos[0] + BALL_RADIUS) >= (WIDTH - PAD_WIDTH)):
-        ball_vel[0] = ball_vel[0] * -1
+    if ((ball_pos[0] - BALL_RADIUS) < PAD_WIDTH):
+        spawn_ball("RIGHT")
+    elif ((ball_pos[0] + BALL_RADIUS) > (WIDTH - PAD_WIDTH)):
+        spawn_ball("LEFT")
     # reflection vertically
     if ((ball_pos[1] - BALL_RADIUS) <= 0) or \
        ((ball_pos[1] + BALL_RADIUS) >= HEIGHT):
