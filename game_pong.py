@@ -73,10 +73,12 @@ def draw(canvas):
     # draw ball
 
     # update paddle's vertical position, keep paddle on the screen
-    if (paddle1_pos - HALF_PAD_HEIGHT >= 0) and (paddle1_pos + HALF_PAD_HEIGHT <= HEIGHT):
+    if ((paddle1_pos + paddle1_vel) - HALF_PAD_HEIGHT >= 0) and \
+       ((paddle1_pos + paddle1_vel) + HALF_PAD_HEIGHT <= HEIGHT):
         paddle1_pos = paddle1_pos + paddle1_vel
 
-    if (paddle2_pos - HALF_PAD_HEIGHT >= 0) and (paddle2_pos + HALF_PAD_HEIGHT <= HEIGHT):
+    if ((paddle2_pos + paddle2_vel) - HALF_PAD_HEIGHT >= 0) and \
+       ((paddle2_pos + paddle2_vel) + HALF_PAD_HEIGHT <= HEIGHT):
         paddle2_pos = paddle2_pos + paddle2_vel
 
     # draw paddles
