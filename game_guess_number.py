@@ -2,7 +2,6 @@ import simplegui
 import random
 import math
 
-
 # ---------------------- Global variables default set up ---------------------- #
 secret_number_range = 100
 secret_number_value = None
