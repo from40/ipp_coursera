@@ -11,44 +11,47 @@ PAD_WIDTH = 8
 PAD_HEIGHT = 80
 HALF_PAD_WIDTH = PAD_WIDTH / 2
 HALF_PAD_HEIGHT = PAD_HEIGHT / 2
-# LEFT = False
-# RIGHT = True
-direction = "RIGHT"
-
+direction = None
 paddle1_pos = HEIGHT // 2
 paddle2_pos = HEIGHT // 2
-
 paddle1_vel = 0
 paddle2_vel = 0
-
 player_b = 0
 player_a = 0
 
 
 # initialize ball_pos and ball_vel for new bal in middle of table
 # if direction is RIGHT, the ball's velocity is upper right, else upper left
-
 def spawn_ball(direction):
     global ball_pos, ball_vel # these are vectors stored as lists
     ball_pos = [WIDTH // 2, HEIGHT // 2]
-    ball_vel = [0, 0]
+    ball_vel = [0, (random.randrange(1, 3) * -1)]
     if direction == "RIGHT":
-        side = 1
+        ball_vel[0] = random.randrange(2, 4)
     elif direction == "LEFT":
-        side = -1
-    ball_vel[0] = random.randrange(2, 4) * side
-    ball_vel[1] = random.randrange(1, 3)
+        ball_vel[0] = random.randrange(2, 4) * -1
 
 
 # define event handlers
 def new_game():
-    global paddle1_pos, paddle2_pos, paddle1_vel, paddle2_vel  # these are numbers
+    global paddle1_pos, paddle2_pos, paddle1_vel, paddle2_vel, player_b, player_a, direction
     global score1, score2  # these are ints
-    spawn_ball(direction)
+    paddle1_pos = HEIGHT // 2
+    paddle1_vel = 0
+    paddle2_pos = HEIGHT // 2
+    paddle2_vel = 0
+    player_b = 0
+    player_a = 0
+    direction_choice = ["RIGHT", "LEFT"]
+    spawn_ball(random.choice(direction_choice))
+
+
+def restart_game():
+    new_game()
 
 
 def draw(canvas):
-    global score1, score2, paddle1_pos, paddle2_pos, ball_pos, ball_vel, player_a, player_b
+    global paddle1_pos, paddle2_pos, ball_pos, ball_vel, player_a, player_b
 
     # draw mid line and gutters
     canvas.draw_line([WIDTH / 2, 0],[WIDTH / 2, HEIGHT], 1, "White")
@@ -139,6 +142,7 @@ frame = simplegui.create_frame("Pong", WIDTH, HEIGHT)
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(keydown)
 frame.set_keyup_handler(keyup)
+btn_restart = frame.add_button("Restart game", restart_game, 150)
 
 
 # start frame
