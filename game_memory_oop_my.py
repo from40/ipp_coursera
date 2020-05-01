@@ -89,6 +89,7 @@ def mouseclick(pos):
                     first_tile = tile
                 elif state == 1:
                     counter_turns += 1
+                    label.set_text("Turns = " + str(counter_turns))
                     state = 2
                     second_tile = tile
                 elif state == 2:
@@ -101,7 +102,6 @@ def mouseclick(pos):
                     else:
                         first_tile = tile
                         second_tile = None
-    label.set_text("Turns = " + str(counter_turns))
 
 
 # create frame and add a button and labels
