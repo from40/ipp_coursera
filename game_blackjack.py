@@ -81,7 +81,6 @@ class Hand:
             else:
                 return hand_value
 
-
     def draw(self, canvas, pos):
         pass	# draw a hand on the canvas, use the draw method for cards
 
@@ -121,25 +120,48 @@ def deal():
     player_hand.add_card(deck.deal_card())
     dealer_hand.add_card(deck.deal_card())
     dealer_hand.add_card(deck.deal_card())
+    print(score)
     print("Player " + str(player_hand))
     print("Dealer " + str(dealer_hand))
 
 
 def hit():
-    global in_play, player_hand
+    global in_play, player_hand, score
     # if the hand is in play, hit the player
     if in_play:
         player_hand.add_card(deck.deal_card())
+        print("You have ", player_hand.get_value())
     # if busted, assign a message to outcome, update in_play and score
-    if player_hand.get_value() > 21:
-        print("You have been busted")
+        if player_hand.get_value() > 21:
+            print("You have been busted!")
+            in_play = False
+            score -= 1
+
 
 def stand():
-    pass	# replace with your code below
-
+    global in_play, score
     # if hand is in play, repeatedly hit dealer until his hand has value 17 or more
-
     # assign a message to outcome, update in_play and score
+    if in_play:
+        while dealer_hand.get_value() < 17:
+            dealer_hand.add_card(deck.deal_card())
+            print("Dealer has ", dealer_hand.get_value())
+        if dealer_hand.get_value() > 21:
+                print("Dealer has been busted!")
+                score += 1
+                in_play = False
+        else:
+            if player_hand.get_value() > dealer_hand.get_value():
+                print("You have won!")
+                score += 1
+                in_play = False
+            else:
+                print("Dealer has won!")
+                score -= 1
+                in_play = False
+    else:
+        pass
+
 
 # draw handler
 def draw(canvas):
