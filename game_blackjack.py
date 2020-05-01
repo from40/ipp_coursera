@@ -200,7 +200,7 @@ def draw(canvas):
                            dealer_pos[1] + CARD_BACK_CENTER[1]],
                           CARD_BACK_SIZE)
     else:
-            canvas.draw_text("Dealer score: " + str(dealer_hand.get_value()),
+        canvas.draw_text("Dealer score: " + str(dealer_hand.get_value()),
                              [dealer_pos[0], dealer_pos[1] - 30], 20, 'White')
 
 
