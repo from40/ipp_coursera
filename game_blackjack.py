@@ -13,6 +13,10 @@ CARD_BACK_SIZE = (72, 96)
 CARD_BACK_CENTER = (36, 48)
 card_back = simplegui.load_image("http://storage.googleapis.com/codeskulptor-assets/card_jfitz_back.png")
 
+# some global variables for drawing a hand
+pos = [78, 420]
+
+
 # initialize some useful global variables
 in_play = False
 outcome = ""
@@ -82,8 +86,9 @@ class Hand:
                 return hand_value
 
     def draw(self, canvas, pos):
-        pass	# draw a hand on the canvas, use the draw method for cards
-
+        # draw a hand on the canvas, use the draw method for cards
+        for i in range(len(self.cards_in_hand)):
+            self.cards_in_hand[i].draw(canvas, [pos[0] * (i + 1), pos[1]])
 
 # define deck class
 class Deck:
@@ -109,13 +114,15 @@ class Deck:
 
 #define event handlers for buttons
 def deal():
-    global outcome, in_play, deck, player_hand, dealer_hand
+    global outcome, in_play, deck, player_hand, dealer_hand, score
+    if in_play:
+        score -= 1
+        in_play = False
     deck = Deck()
     deck.shuffle()
     player_hand = Hand()
     dealer_hand = Hand()
     in_play = True
-    # your code goes here
     player_hand.add_card(deck.deal_card())
     player_hand.add_card(deck.deal_card())
     dealer_hand.add_card(deck.deal_card())
@@ -167,9 +174,9 @@ def stand():
 def draw(canvas):
     # test to make sure that card.draw works, replace with your code below
 
-    card = Card("S", "A")
-    card.draw(canvas, [300, 300])
-
+    #card = Card("S", "A")
+    #card.draw(canvas, [300, 300])
+    player_hand.draw(canvas, pos)
 
 # initialization frame
 frame = simplegui.create_frame("Blackjack", 600, 600)
@@ -189,19 +196,6 @@ frame.start()
 
 # remember to review the gradic rubric
 
-
-
-
-
-def stand():
-    pass	# replace with your code below
-
-    # if hand is in play, repeatedly hit dealer until his hand has value 17 or more
-    """
-    while the value of the dealer's hand (use value methods) is less than 17:
-        hit the dearler's hand (use hit function)
-
-    """
 
 
 # Grading rubric - 18 pts total (scaled to 100)
