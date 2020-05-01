@@ -76,18 +76,23 @@ class Hand:
 # define deck class
 class Deck:
     def __init__(self):
-        pass	# create a Deck object
+        # create a Deck object
+        self.deck = [Card(i, j) for i in SUITS for j in RANKS]
 
     def shuffle(self):
         # shuffle the deck
-        pass    # use random.shuffle()
+        random.shuffle(self.deck)
 
     def deal_card(self):
-        pass	# deal a card object from the deck
+        # deal a card object from the deck
+        return self.deck.pop(-1)
 
     def __str__(self):
-        pass	# return a string representing the deck
-
+        # return a string representing the deck
+        deck_view = ""
+        for card in self.deck:
+            deck_view = deck_view + str(card.get_suit()) + str(card.get_rank()) + " "
+        return "Deck contains " + deck_view
 
 
 #define event handlers for buttons
