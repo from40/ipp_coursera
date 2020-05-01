@@ -13,13 +13,14 @@ CARD_BACK_SIZE = (72, 96)
 CARD_BACK_CENTER = (36, 48)
 card_back = simplegui.load_image("http://storage.googleapis.com/codeskulptor-assets/card_jfitz_back.png")
 
-# some global variables for drawing a hand
+# some global variables for drawing
+WIGHT = 600
+HIGHT = 600
 pos = [78, 420]
-
 
 # initialize some useful global variables
 in_play = False
-outcome = ""
+outcome = "Hit or stand?"
 score = 0
 
 # define globals for cards
@@ -127,26 +128,28 @@ def deal():
     player_hand.add_card(deck.deal_card())
     dealer_hand.add_card(deck.deal_card())
     dealer_hand.add_card(deck.deal_card())
+    outcome = "Hit or stand?"
     print(score)
     print("Player " + str(player_hand))
     print("Dealer " + str(dealer_hand))
 
 
 def hit():
-    global in_play, player_hand, score
+    global outcome, in_play, player_hand, score
     # if the hand is in play, hit the player
     if in_play:
         player_hand.add_card(deck.deal_card())
         print("You have ", player_hand.get_value())
     # if busted, assign a message to outcome, update in_play and score
         if player_hand.get_value() > 21:
+            outcome = "You have been busted! New deal?"
             print("You have been busted!")
             in_play = False
             score -= 1
 
 
 def stand():
-    global in_play, score
+    global outcome, in_play, score
     # if hand is in play, repeatedly hit dealer until his hand has value 17 or more
     # assign a message to outcome, update in_play and score
     if in_play:
@@ -154,15 +157,18 @@ def stand():
             dealer_hand.add_card(deck.deal_card())
             print("Dealer has ", dealer_hand.get_value())
         if dealer_hand.get_value() > 21:
+                outcome = "Dealer has been busted! New deal?"
                 print("Dealer has been busted!")
                 score += 1
                 in_play = False
         else:
             if player_hand.get_value() > dealer_hand.get_value():
+                outcome = "You have won! New deal?"
                 print("You have won!")
                 score += 1
                 in_play = False
             else:
+                outcome = "Dealer has won! New deal?"
                 print("Dealer has won!")
                 score -= 1
                 in_play = False
@@ -176,10 +182,13 @@ def draw(canvas):
 
     #card = Card("S", "A")
     #card.draw(canvas, [300, 300])
+    canvas.draw_text("Blackjack", [(WIGHT // 2) - 100, 50], 40, 'White')
+    canvas.draw_text(outcome, [78, HIGHT // 2], 30, 'Red')
+
     player_hand.draw(canvas, pos)
 
 # initialization frame
-frame = simplegui.create_frame("Blackjack", 600, 600)
+frame = simplegui.create_frame("Blackjack", WIGHT, HIGHT)
 frame.set_canvas_background("Green")
 
 #create buttons and canvas callback
@@ -218,41 +227,3 @@ frame.start()
 # 2 pts - The program accurately prompts the player for an action with the messages
 #        "Hit or stand?" and "New deal?". (1 pt per message)
 # 1 pt - The program keeps score correctly.
-
-
-draw_method for cards:
-card_size[x, y]
-card_center[x / 2, y / 2]
-card_raw_number = j
-card_column_number = i
-
-card_pos = [card_center[0] + (card_column_number * card_size[0]),
-            card_center[1] + (card_raw_number * card_size[1])
-           ]
-
-
-
-
-# define globals for cards
-RANKS = ('A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K')
-SUITS = ('C', 'S', 'H', 'D')
-
-# card sprite - 950x392
-CARD_CENTER = (36.5, 49)
-CARD_SIZE = (73, 98)
-card_image = simplegui.load_image("http://commondatastorage.googleapis.com/codeskulptor-assets/cards.jfitz.png")
-
-
-
-# define card class
-class Card:
-    def __init__(self, suit, rank):
-        self.rank = rank
-        self.suit = suit
-
-    def draw(self, canvas, loc):
-        i = RANKS.index(self.rank)
-        j = SUITS.index(self.suit)
-        card_pos = [CARD_CENTER[0] + i * CARD_SIZE[0],
-                    CARD_CENTER[1] + j * CARD_SIZE[1]]
-        canvas.draw_image(card_image, card_pos, CARD_SIZE, loc, CARD_SIZE)
