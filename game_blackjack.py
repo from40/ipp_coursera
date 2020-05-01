@@ -183,20 +183,25 @@ def draw(canvas):
 
     #card = Card("S", "A")
     #card.draw(canvas, [300, 300])
-    canvas.draw_text("Blackjack", [(WIGHT // 2) - 80, 50], 40, 'Purple')
+    canvas.draw_text("Blackjack", [30, 50], 40, 'Purple')
     canvas.draw_text(outcome, [78, HIGHT // 2 + 50], 30, 'White')
 
     dealer_hand.draw(canvas, dealer_pos)
     player_hand.draw(canvas, player_pos)
 
-    canvas.draw_text("Your score: " + str(score),
-                     [(WIGHT // 2) + 120, HIGHT - 40], 24, 'White')
+    canvas.draw_text("Total score: " + str(score),
+                     [(WIGHT // 2) + 120, 47], 24, 'White')
+    canvas.draw_text("Your score: " + str(player_hand.get_value()),
+                     [player_pos[0], player_pos[1] + 140], 20, 'White')
 
     if in_play:
         canvas.draw_image(card_back, CARD_BACK_CENTER, CARD_BACK_SIZE,
                           [dealer_pos[0] + CARD_BACK_CENTER[0],
                            dealer_pos[1] + CARD_BACK_CENTER[1]],
                           CARD_BACK_SIZE)
+    else:
+            canvas.draw_text("Dealer score: " + str(dealer_hand.get_value()),
+                             [dealer_pos[0], dealer_pos[1] - 30], 20, 'White')
 
 
 # initialization frame
