@@ -130,9 +130,9 @@ def deal():
     dealer_hand.add_card(deck.deal_card())
     dealer_hand.add_card(deck.deal_card())
     outcome = "Hit or stand?"
-    print(score)
-    print("Player " + str(player_hand))
-    print("Dealer " + str(dealer_hand))
+    #print(score)
+    #print("Player " + str(player_hand))
+    #print("Dealer " + str(dealer_hand))
 
 
 def hit():
@@ -156,21 +156,21 @@ def stand():
     if in_play:
         while dealer_hand.get_value() < 17:
             dealer_hand.add_card(deck.deal_card())
-            print("Dealer has ", dealer_hand.get_value())
+            #print("Dealer has ", dealer_hand.get_value())
         if dealer_hand.get_value() > 21:
                 outcome = "Dealer has been busted! New deal?"
-                print("Dealer has been busted!")
+                #print("Dealer has been busted!")
                 score += 1
                 in_play = False
         else:
             if player_hand.get_value() > dealer_hand.get_value():
                 outcome = "You have won! New deal?"
-                print("You have won!")
+                #print("You have won!")
                 score += 1
                 in_play = False
             else:
                 outcome = "Dealer has won! New deal?"
-                print("Dealer has won!")
+                #print("Dealer has won!")
                 score -= 1
                 in_play = False
     else:
