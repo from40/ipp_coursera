@@ -126,11 +126,13 @@ def deal():
 
 
 def hit():
-    pass	# replace with your code below
-
+    global in_play, player_hand
     # if the hand is in play, hit the player
-
+    if in_play:
+        player_hand.add_card(deck.deal_card())
     # if busted, assign a message to outcome, update in_play and score
+    if player_hand.get_value() > 21:
+        print("You have been busted")
 
 def stand():
     pass	# replace with your code below
