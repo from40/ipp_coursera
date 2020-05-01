@@ -16,7 +16,8 @@ card_back = simplegui.load_image("http://storage.googleapis.com/codeskulptor-ass
 # some global variables for drawing
 WIGHT = 600
 HIGHT = 600
-pos = [78, 420]
+player_pos = [78, 420]
+dealer_pos = [78, 130]
 
 # initialize some useful global variables
 in_play = False
@@ -182,10 +183,21 @@ def draw(canvas):
 
     #card = Card("S", "A")
     #card.draw(canvas, [300, 300])
-    canvas.draw_text("Blackjack", [(WIGHT // 2) - 100, 50], 40, 'White')
-    canvas.draw_text(outcome, [78, HIGHT // 2], 30, 'Red')
+    canvas.draw_text("Blackjack", [(WIGHT // 2) - 80, 50], 40, 'Purple')
+    canvas.draw_text(outcome, [78, HIGHT // 2 + 50], 30, 'White')
 
-    player_hand.draw(canvas, pos)
+    dealer_hand.draw(canvas, dealer_pos)
+    player_hand.draw(canvas, player_pos)
+
+    canvas.draw_text("Your score: " + str(score),
+                     [(WIGHT // 2) + 120, HIGHT - 40], 24, 'White')
+
+    if in_play:
+        canvas.draw_image(card_back, CARD_BACK_CENTER, CARD_BACK_SIZE,
+                          [dealer_pos[0] + CARD_BACK_CENTER[0],
+                           dealer_pos[1] + CARD_BACK_CENTER[1]],
+                          CARD_BACK_SIZE)
+
 
 # initialization frame
 frame = simplegui.create_frame("Blackjack", WIGHT, HIGHT)
