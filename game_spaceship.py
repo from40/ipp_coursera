@@ -110,24 +110,15 @@ class Ship:
         self.pos[1] += self.vel[1]
         self.angle += self.angle_vel
 
-    def increment_velocity(self):
+    def turn_right(self):
         self.angle_vel += 1
-        print(self.angle_vel)
 
-    def decrement_velocity(self):
+    def turn_left(self):
         self.angle_vel -= 1
-        print(self.angle_vel)
 
-def key_down(key):
-    if key == simplegui.KEY_MAP["right"]:
-        my_ship.increment_velocity()
-    elif key == simplegui.KEY_MAP["left"]:
-        my_ship.decrement_velocity()
-def key_up(key):
-    if key == simplegui.KEY_MAP["right"]:
-        my_ship.decrement_velocity()
-    elif key == simplegui.KEY_MAP["left"]:
-        my_ship.increment_velocity()
+    def thrusters_burst(self, status):
+        self.thrust = status
+        print(str(status))
 
 
 # Sprite class
@@ -176,6 +167,30 @@ def draw(canvas):
     my_ship.update()
     a_rock.update()
     a_missile.update()
+
+
+def key_down(key):
+    # ship's rotation keys handlers
+    if key == simplegui.KEY_MAP["right"]:
+        my_ship.turn_right()
+    elif key == simplegui.KEY_MAP["left"]:
+        my_ship.turn_left()
+
+    # ship's truster handler
+    if key == simplegui.KEY_MAP["up"]:
+        my_ship.thrusters_burst(True)
+
+def key_up(key):
+    # ship's rotation keys handlers
+    if key == simplegui.KEY_MAP["right"]:
+        my_ship.turn_left()
+    elif key == simplegui.KEY_MAP["left"]:
+        my_ship.turn_right()
+
+    # ship's truster handler
+    if key == simplegui.KEY_MAP["up"]:
+        my_ship.thrusters_burst(False)
+
 
 # timer handler that spawns a rock
 def rock_spawner():
