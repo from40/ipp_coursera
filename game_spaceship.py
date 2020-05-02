@@ -114,6 +114,13 @@ class Ship:
         self.pos[0] += self.vel[0]
         self.pos[1] += self.vel[1]
         self.angle += self.angle_vel
+        self.forward_vector = angle_to_vector(math.radians(self.angle))
+        if self.thrust:
+            print(self.angle)
+            print(self.vel)
+            self.vel[0] = self.vel[0] + 0.01 * self.forward_vector[0]
+            self.vel[1] = self.vel[1] + 0.01 * self.forward_vector[1]
+            print(self.vel)
 
     def turn_right(self):
         self.angle_vel += 1
