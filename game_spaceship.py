@@ -108,6 +108,26 @@ class Ship:
     def update(self):
         self.pos[0] += self.vel[0]
         self.pos[1] += self.vel[1]
+        self.angle += self.angle_vel
+
+    def increment_velocity(self):
+        self.angle_vel += 1
+        print(self.angle_vel)
+
+    def decrement_velocity(self):
+        self.angle_vel -= 1
+        print(self.angle_vel)
+
+def key_down(key):
+    if key == simplegui.KEY_MAP["right"]:
+        my_ship.increment_velocity()
+    elif key == simplegui.KEY_MAP["left"]:
+        my_ship.decrement_velocity()
+def key_up(key):
+    if key == simplegui.KEY_MAP["right"]:
+        my_ship.decrement_velocity()
+    elif key == simplegui.KEY_MAP["left"]:
+        my_ship.increment_velocity()
 
 
 # Sprite class
@@ -171,6 +191,9 @@ a_missile = Sprite([2 * WIDTH / 3, 2 * HEIGHT / 3], [-1,1], 0, 0, missile_image,
 
 # register handlers
 frame.set_draw_handler(draw)
+frame.set_keydown_handler(key_down)
+frame.set_keyup_handler(key_up)
+
 
 timer = simplegui.create_timer(1000.0, rock_spawner)
 
