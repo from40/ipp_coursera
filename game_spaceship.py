@@ -124,8 +124,9 @@ class Ship:
     def thrusters_burst(self, status):
         self.thrust = status
         if self.thrust:
-            pass
-            #ship_thrust_sound
+            ship_thrust_sound.play()
+        else:
+            ship_thrust_sound.rewind()
         print(str(status))
 
 
