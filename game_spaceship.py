@@ -100,8 +100,13 @@ class Ship:
         self.image_size = info.get_size()
         self.radius = info.get_radius()
 
+# ship_info = ImageInfo([45, 45], [90, 90], 35)
     def draw(self,canvas):
-        canvas.draw_image(self.image, self.image_center, self.image_size,
+        if self.thrust:
+            canvas.draw_image(self.image, (self.image_center[0] * 3, self.image_center[1]), self.image_size,
+                          self.pos, self.image_size, math.radians(self.angle))
+        else:
+            canvas.draw_image(self.image, self.image_center, self.image_size,
                           self.pos, self.image_size, math.radians(self.angle))
 
 
@@ -118,6 +123,9 @@ class Ship:
 
     def thrusters_burst(self, status):
         self.thrust = status
+        if self.thrust:
+            pass
+            #ship_thrust_sound
         print(str(status))
 
 
