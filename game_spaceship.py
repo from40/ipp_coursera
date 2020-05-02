@@ -9,6 +9,7 @@ HEIGHT = 600
 score = 0
 lives = 3
 time = 0
+friction_rate = 0.005
 
 class ImageInfo:
     def __init__(self, center, size, radius = 0, lifespan = None, animated = False):
@@ -114,15 +115,14 @@ class Ship:
         self.pos[0] = (self.pos[0] + self.vel[0]) % WIDTH
         self.pos[1] = (self.pos[1] + self.vel[1]) % HEIGHT
         self.angle += self.angle_vel
+        # define acceleration vector and use it during thrust on
         self.forward_vector = angle_to_vector(math.radians(self.angle))
         if self.thrust:
-            print(self.angle)
-            print(self.vel)
             self.vel[0] = self.vel[0] + 0.01 * self.forward_vector[0]
             self.vel[1] = self.vel[1] + 0.01 * self.forward_vector[1]
-            print(self.vel)
-
-
+        # add friction
+        self.vel[0] *= (1 - friction_rate)
+        self.vel[1] *= (1 - friction_rate)
 
 
     def turn_right(self):
