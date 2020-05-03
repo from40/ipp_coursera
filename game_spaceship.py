@@ -101,6 +101,7 @@ class Ship:
         self.image_size = info.get_size()
         self.radius = info.get_radius()
 
+
     def draw(self,canvas):
         if self.thrust:
             canvas.draw_image(self.image, (self.image_center[0] * 3, self.image_center[1]), self.image_size,
@@ -108,6 +109,7 @@ class Ship:
         else:
             canvas.draw_image(self.image, self.image_center, self.image_size,
                           self.pos, self.image_size, math.radians(self.angle))
+
 
     def update(self):
         self.pos[0] = (self.pos[0] + self.vel[0]) % WIDTH
@@ -122,11 +124,14 @@ class Ship:
         self.vel[0] *= (1 - friction_rate)
         self.vel[1] *= (1 - friction_rate)
 
+
     def turn_right(self):
         self.angle_vel += 1
 
+
     def turn_left(self):
         self.angle_vel -= 1
+
 
     def thrusters_burst(self, status):
         self.thrust = status
@@ -136,10 +141,11 @@ class Ship:
             ship_thrust_sound.rewind()
         print(str(status))
 
-    global a_missile
+
     def shoot(self):
-        a_missile = Sprite([self.pos[0] + self.image_size[0] // 2, self.pos[1]],
-                           [self.vel[0] * self.forward_vector[0], self.vel[1] * self.forward_vector[1]],
+        global a_missile
+        a_missile = Sprite([self.pos[0] + self.radius * self.forward_vector[0], self.pos[1] + self.radius * self.forward_vector[1]],
+                           [self.vel[0] + self.forward_vector[0], self.vel[1] + self.forward_vector[1]],
                             0, 0, missile_image, missile_info, missile_sound)
 
 
@@ -194,6 +200,11 @@ def draw(canvas):
     my_ship.update()
     a_rock.update()
     a_missile.update()
+
+    # show lives and score
+    canvas.draw_text(str(lives), (60, 30), 30, 'White')
+    canvas.draw_text(str(score), (WIDTH - 100, 30), 30, 'White')
+
 
 
 def key_down(key):
