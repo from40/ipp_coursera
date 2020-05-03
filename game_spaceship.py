@@ -101,7 +101,6 @@ class Ship:
         self.image_size = info.get_size()
         self.radius = info.get_radius()
 
-# ship_info = ImageInfo([45, 45], [90, 90], 35)
     def draw(self,canvas):
         if self.thrust:
             canvas.draw_image(self.image, (self.image_center[0] * 3, self.image_center[1]), self.image_size,
@@ -109,7 +108,6 @@ class Ship:
         else:
             canvas.draw_image(self.image, self.image_center, self.image_size,
                           self.pos, self.image_size, math.radians(self.angle))
-
 
     def update(self):
         self.pos[0] = (self.pos[0] + self.vel[0]) % WIDTH
@@ -123,7 +121,6 @@ class Ship:
         # add friction
         self.vel[0] *= (1 - friction_rate)
         self.vel[1] *= (1 - friction_rate)
-
 
     def turn_right(self):
         self.angle_vel += 1
