@@ -136,6 +136,12 @@ class Ship:
             ship_thrust_sound.rewind()
         print(str(status))
 
+    global a_missile
+    def shoot(self):
+        a_missile = Sprite([self.pos[0] + self.image_size[0] // 2, self.pos[1]],
+                           [self.vel[0] * self.forward_vector[0], self.vel[1] * self.forward_vector[1]],
+                            0, 0, missile_image, missile_info, missile_sound)
+
 
 # Sprite class
 class Sprite:
@@ -154,6 +160,7 @@ class Sprite:
         if sound:
             sound.rewind()
             sound.play()
+
 
     def draw(self, canvas):
         canvas.draw_image(self.image, self.image_center, self.image_size,
@@ -199,6 +206,10 @@ def key_down(key):
     # ship's truster handler
     if key == simplegui.KEY_MAP["up"]:
         my_ship.thrusters_burst(True)
+
+    # missle launch handler
+    if key == simplegui.KEY_MAP["space"]:
+        my_ship.shoot()
 
 def key_up(key):
     # ship's rotation keys handlers
