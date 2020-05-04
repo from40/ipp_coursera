@@ -21,7 +21,7 @@ class SolitaireMancala:
                str(self.board[6])
 
     def set_board(self, configuration):
-        for i in range(len(self.board)):
+        for i in range(len(configuration)):
             self.board [i] = configuration[i]
 
     def get_num_seeds(self, house_num):
@@ -62,7 +62,7 @@ class SolitaireMancala:
         self.next_move = self.choose_move()
         while self.next_move:
             self.moves_plan.append(self.next_move)
-            apply_move(self.next_move)
+            self.apply_move(self.next_move)
             self.next_move = self.choose_move()
         self.board = self.shadow_board
         return self.moves_plan
