@@ -202,8 +202,8 @@ def draw(canvas):
     a_missile.update()
 
     # show lives and score
-    canvas.draw_text(str(lives), (60, 30), 30, 'White')
-    canvas.draw_text(str(score), (WIDTH - 100, 30), 30, 'White')
+    canvas.draw_text("Lives: " + str(lives), (60, 30), 30, 'White')
+    canvas.draw_text("Score: " +str(score), (WIDTH - 100, 30), 30, 'White')
 
 
 
