@@ -45,13 +45,13 @@ class SolitaireMancala:
             print("Move is illigal!")
 
     def choose_move(self):
-        for i in range(1, len(self.board) + 1):
+        for i in range(1, len(self.board)):
             if self.is_legal_move(i):
                 return i
         return False
 
     def is_game_won(self):
-        for i in range(1, len(self.board) + 1):
+        for i in range(1, len(self.board)):
             if self.board[i] != 0:
                 return False
         return True
@@ -129,9 +129,9 @@ def test_mancala():
 
 
 
-test_mancala()
+#test_mancala()
 
 
 # Import GUI code once you feel your code is correct
-# import poc_mancala_gui
-# poc_mancala_gui.run_gui(SolitaireMancala())
+import poc_mancala_gui
+poc_mancala_gui.run_gui(SolitaireMancala())
