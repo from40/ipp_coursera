@@ -1,189 +1,137 @@
-CodeSkulptor3
-
-
-Code
-6
-1
 """
-2
 Student facing implement of solitaire version of Mancala - Tchoukaillon
-3
-​
-4
+
 Goal: Move as many seeds from given houses into the store
-5
-​
-6
+
 In GUI, you make ask computer AI to make move or click to attempt a legal move
-7
 """
-8
-​
-9
-​
-10
+
+
 class SolitaireMancala:
-11
     def __init__(self):
-12
         self.board = [0, 0, 0, 0, 0, 0, 0]
-13
-​
-14
+
     def __str__(self):
-15
         return str(self.board[0]) + ", " + \
-16
                str(self.board[1]) + ", " + \
-17
                str(self.board[2]) + ", " + \
-18
                str(self.board[3]) + ", " + \
-19
                str(self.board[4]) + ", " + \
-20
                str(self.board[5]) + ", " + \
-21
                str(self.board[6])
-22
-​
-23
+
     def set_board(self, configuration):
-24
         for i in range(len(self.board)):
-25
             self.board [i] = configuration[i]
-26
-​
-27
+
     def get_num_seeds(self, house_num):
-28
         return self.board[house_num]
-29
-​
-30
+
     def is_legal_move(self, house_num):
-31
         if house_num == 0:
-32
             return False
-33
         else:
-34
-            if self.get_num_seeds(house_num) > 0:
-35
+            if self.get_num_seeds(house_num) == house_num:
                 return True
-36
             else:
-37
                 return False
-38
-​
-39
+
     def apply_move(self, house_num):
-40
         if self.is_legal_move(house_num):
-41
             self.board[house_num] = 0
-42
             for i in range(house_num):
-43
                 self.board[i] = self.board[i] + 1
-44
         else:
-45
             print("Move is illigal!")
-46
-​
-47
+
     def choose_move(self):
-48
         for i in range(1, len(self.board) + 1):
-49
-            if self.board[i] > 0:
-50
+            if self.is_legal_move(i):
                 return i
-51
-​
-52
+        return False
+
     def is_game_won(self):
-53
-        for i in range(1, len(self.board)):
-54
-            if self.board[len(self.board) - (i + 1)] != 0:
-55
+        for i in range(1, len(self.board) + 1):
+            if self.board[i] != 0:
                 return False
-56
         return True
-57
-​
-58
+
     def plan_moves(self):
-59
-        pass
-60
+        self.shadow_board = self.board
+        self.moves_plan = []
+        self.next_move = self.choose_move()
+        while self.next_move:
+            self.moves_plan.append(self.next_move)
+            apply_move(self.next_move)
+            self.next_move = self.choose_move()
+        self.board = self.shadow_board
+        return self.moves_plan
 
-61
-​
-62
 # Create tests to check the correctness of your code
-63
-​
-64
+
 def test_mancala():
-65
     """
-66
     Test code for Solitaire Mancala
-67
     """
-68
     # test __init__()
-69
     my_game = SolitaireMancala()
-70
     print("__init__. # Initialize Mancala game with empty board")
-71
     print("Testing init - Expected: 0, 0, 0, 0, 0, 0, 0")
-72
     print("Testing init - Computed:", my_game, "\n")
-73
-
-Output
-__init__. # Initialize Mancala game with empty board
-Testing init - Expected: 0, 0, 0, 0, 0, 0, 0
-Testing init - Computed: 0, 0, 0, 0, 0, 0, 0
-
-set_board. # Seeds stones inside houses according give config
-Testing set_board - Expected: [0, 5, 3, 1, 1, 0, 0]
-Testing set_board - Computed: [0, 0, 1, 1, 3, 5, 0]
-
-get_num_seeds. # Return number of seeds in dedicated house
-Testing get_num_seeds - Expected: 0
-Testing get_num_seeds - Computed: 0
-Testing get_num_seeds - Expected: 1
-Testing get_num_seeds - Computed: 1
-Testing get_num_seeds - Expected: 5
-Testing get_num_seeds - Computed: 5
-
-is_legal_move. Calculate if move from give house_num is legal, return True (of False)
-Testing is_legal_move - move from Store - Expected: False
-Testing is_legal_move - move from Store - Computed: False
-Testing is_legal_move - move from 2nd house - Expected: True
-Testing is_legal_move - move from 2nd house - Computed: True
-Testing is_legal_move - move from 5th house - Expected: True
-Testing is_legal_move - move from 5th house - Computed: True
-
-apply_move.Testing move from give house_num
-Testing apply_move - situation after move from 1st house - Expected: [1, 1, 2, 2, 4, 0, 0]
-Testing apply_move - situation after move from 1st house - Computed: [1, 1, 2, 2, 4, 0, 0]
-
-Testing apply_move - situation after move from 3rd house - Expected: [2, 2, 3, 0, 4, 0, 0]
-Testing apply_move - situation after move from 3rd house - Computed: [2, 2, 3, 0, 4, 0, 0]
 
 
-choose_move. Returns number of house with best move according strategy
-Testing choose_move - Expected: 2
-Testing choose_move - Computed: 2
-Testing choose_move - Expected: 6
-Testing choose_move - Computed: 6
+    # test set_board()
+    config1 = [0, 0, 1, 1, 3, 5, 0]
+    my_game.set_board(config1)
+    config1_reverse = list(config1)
+    config1_reverse.reverse()
+    print("set_board. # Seeds stones inside houses according give config")
+    print("Testing set_board - Expected:", config1_reverse)
+    print("Testing set_board - Computed: [", str(my_game), "]\n", sep="")
+
+    # test get_num_seeds()
+    print("get_num_seeds. # Return number of seeds in dedicated house")
+    print("Testing get_num_seeds - Expected:", config1[1])
+    print("Testing get_num_seeds - Computed:", my_game.get_num_seeds(1))
+    print("Testing get_num_seeds - Expected:", config1[3])
+    print("Testing get_num_seeds - Computed:", my_game.get_num_seeds(3))
+    print("Testing get_num_seeds - Expected:", config1[5])
+    print("Testing get_num_seeds - Computed:", my_game.get_num_seeds(5))
+
+    # is_legal_move()
+    print("\nis_legal_move. Calculate if move from give house_num is legal, return True (of False)")
+    print("Testing is_legal_move - move from Store - Expected: False")
+    print("Testing is_legal_move - move from Store - Computed:", my_game.is_legal_move(0))
+    print("Testing is_legal_move - move from 2nd house - Expected: False")
+    print("Testing is_legal_move - move from 2nd house - Computed:", my_game.is_legal_move(2))
+    print("Testing is_legal_move - move from 5th house - Expected:", bool(config1[5]))
+    print("Testing is_legal_move - move from 5th house - Computed:", my_game.is_legal_move(5))
+
+    # apply_move()
+    print("\napply_move.Testing move from give house_num")
+    print("Testing apply_move - situation after move from 1st house - Expected: [1, 1, 2, 2, 4, 0, 0]")
+    my_game.apply_move(5)
+    print("Testing apply_move - situation after move from 1st house - Computed: [", str(my_game), "]\n", sep="")
+    print("Testing apply_move - situation after move from 3rd house - Expected: [2, 2, 3, 0, 4, 0, 0]")
+    my_game.apply_move(3)
+    print("Testing apply_move - situation after move from 3rd house - Computed: [", str(my_game), "]\n", sep="")
+
+    # choose_move()
+    print("\nchoose_move. Returns number of house with best move according strategy")
+    config1 = [0, 0, 2, 1, 3, 5, 0]
+    my_game.set_board(config1)
+    print("Testing choose_move - Expected: 2")
+    print("Testing choose_move - Computed:", my_game.choose_move())
+    config1 = [0, 0, 0, 0, 0, 0, 6]
+    my_game.set_board(config1)
+    print("Testing choose_move - Expected: 6")
+    print("Testing choose_move - Computed:", my_game.choose_move())
+
+
+
+test_mancala()
+
+
+# Import GUI code once you feel your code is correct
+# import poc_mancala_gui
+# poc_mancala_gui.run_gui(SolitaireMancala())
