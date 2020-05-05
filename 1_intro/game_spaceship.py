@@ -178,6 +178,16 @@ class Sprite:
         self.pos[1] = (self.pos[1] + self.vel[1]) % HEIGHT
         self.angle += self.angle_vel
 
+    def collide(self, other_sprite):
+        # self.pos, self.radius
+        # other_sprite.get_pos()
+        # other_sprite.get_radius()
+        # return True - if collision, or False
+        pass
+
+    def group_collide():
+        pass
+
 
 def draw(canvas):
     global time

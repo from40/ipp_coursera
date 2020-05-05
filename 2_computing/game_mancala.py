@@ -22,7 +22,7 @@ class SolitaireMancala:
 
     def set_board(self, configuration):
         for i in range(len(configuration)):
-            self.board [i] = configuration[i]
+            self.board[i] = configuration[i]
 
     def get_num_seeds(self, house_num):
         return self.board[house_num]
