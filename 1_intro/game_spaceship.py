@@ -80,7 +80,7 @@ soundtrack = simplegui.load_sound(
     "http://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/soundtrack.mp3")
 missile_sound = simplegui.load_sound(
     "http://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/missile.mp3")
-missile_sound.set_volume(.5)
+missile_sound.set_volume(.4)
 ship_thrust_sound = simplegui.load_sound(
     "http://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/thrust.mp3")
 explosion_sound = simplegui.load_sound(
@@ -119,6 +119,16 @@ def group_collide(group, other_object):
             group.remove(elem)
             return True
     return False
+
+
+def group_group_collide(group_one, group_two):
+    shadow_group = set(group_one)
+    elements_collide = 0
+    for elem in shadow_group:
+        if group_collide(group_two, elem):
+            elements_collide += 1
+            group_one.discard(elem)
+    return elements_collide
 
 
 # Ship class
@@ -236,12 +246,9 @@ class Sprite:
         else:
             return False
 
-    def group_collide(self):
-        pass
-
 
 def draw(canvas):
-    global time, lives
+    global time, lives, score, started, rock_group, missile_group
 
     # animiate background
     time += 1
@@ -267,6 +274,18 @@ def draw(canvas):
     if group_collide(rock_group, my_ship):
         lives -= 1
 
+    # to determine if the missile hits any of the rocks and score it if so
+    score += group_group_collide(missile_group, rock_group)
+
+    # if the number of lives becomes 0, the game is reset
+    if lives <= 0:
+        started = False
+        lives = 3
+        score = 0
+        rock_group = set()
+        missile_group = set()
+        soundtrack.rewind()
+
     # draw UI
     canvas.draw_text("Lives: " + str(lives), (60, 30), 30, 'White')
     canvas.draw_text("Score: " + str(score), (WIDTH - 140, 30), 30, 'White')
@@ -276,6 +295,7 @@ def draw(canvas):
         canvas.draw_image(splash_image, splash_info.get_center(),
                           splash_info.get_size(), [WIDTH / 2, HEIGHT / 2],
                           splash_info.get_size())
+        timer.stop()
 
 
 # dismiss the splash screen image (in the start of the game) with a mouse click
@@ -287,6 +307,8 @@ def click(pos):
     inheight = (center[1] - size[1] / 2) < pos[1] < (center[1] + size[1] / 2)
     if (not started) and inwidth and inheight:
         started = True
+        timer.start()
+        soundtrack.play()
 
 
 def key_down(key):
@@ -323,7 +345,8 @@ def rock_spawner():
     if len(rock_group) < 12:
         rock = Sprite([random.randrange(0, WIDTH), random.randrange(0, HEIGHT)],
                       [random.randrange(-5, 5) / 5, random.randrange(-5, 5) / 5],
-                      random.randrange(0, 360), random.random() / random.choice([-2, 2]), asteroid_image, asteroid_info)
+                      random.randrange(0, 360), random.random() / random.choice([-2, 2]),
+                      asteroid_image, asteroid_info)
         rock_group.add(rock)
 
 
@@ -341,8 +364,6 @@ timer = simplegui.create_timer(1000.0, rock_spawner)
 my_ship = Ship([WIDTH / 2, HEIGHT / 2], [0, 0], 0, ship_image, ship_info)
 rock_group = set()
 missile_group = set()
-# a_missile = Sprite([2 * WIDTH / 3, 2 * HEIGHT / 3], [-1, 1], 0, 0, missile_image, missile_info, missile_sound)
 
 # get things rolling
-timer.start()
 frame.start()
