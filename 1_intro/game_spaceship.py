@@ -10,6 +10,7 @@ score = 0
 lives = 3
 time = 0
 friction_rate = 0.005
+started = False
 
 class ImageInfo:
     def __init__(self, center, size, radius = 0, lifespan = None, animated = False):
@@ -112,14 +113,19 @@ class Ship:
 
 
     def update(self):
+        # update position
         self.pos[0] = (self.pos[0] + self.vel[0]) % WIDTH
         self.pos[1] = (self.pos[1] + self.vel[1]) % HEIGHT
+
+        # update angle
         self.angle += self.angle_vel
+
         # define acceleration vector and use it during thrust on
         self.forward_vector = angle_to_vector(math.radians(self.angle))
         if self.thrust:
             self.vel[0] = self.vel[0] + 0.01 * self.forward_vector[0]
             self.vel[1] = self.vel[1] + 0.01 * self.forward_vector[1]
+
         # add friction
         self.vel[0] *= (1 - friction_rate)
         self.vel[1] *= (1 - friction_rate)
@@ -183,6 +189,7 @@ class Sprite:
         # other_sprite.get_pos()
         # other_sprite.get_radius()
         # return True - if collision, or False
+
         pass
 
     def group_collide():
@@ -211,10 +218,15 @@ def draw(canvas):
     a_rock.update()
     a_missile.update()
 
-    # show lives and score
+    # draw UI
     canvas.draw_text("Lives: " + str(lives), (60, 30), 30, 'White')
-    canvas.draw_text("Score: " +str(score), (WIDTH - 100, 30), 30, 'White')
+    canvas.draw_text("Score: " +str(score), (WIDTH - 140, 30), 30, 'White')
 
+    # draw splash screen if not started
+    if not started:
+        canvas.draw_image(splash_image, splash_info.get_center(),
+                          splash_info.get_size(), [WIDTH / 2, HEIGHT / 2],
+                          splash_info.get_size())
 
 
 def key_down(key):
@@ -244,28 +256,41 @@ def key_up(key):
         my_ship.thrusters_burst(False)
 
 
+def click(pos):
+    global started
+    center = [WIDTH / 2, HEIGHT / 2]
+    size = splash_info.get_size()
+    inwidth = (center[0] - size[0] / 2) < pos[0] < (center[0] + size[0] / 2)
+    inheight = (center[1] - size[1] / 2) < pos[1] < (center[1] + size[1] / 2)
+    if (not started) and inwidth and inheight:
+        started = True
+
+
 # timer handler that spawns a rock
 def rock_spawner():
-    global a_rock
-    a_rock = Sprite([random.randrange(0, WIDTH), random.randrange(0, HEIGHT)],
-                   [random.randrange(-5, 5) / 5, random.randrange(-5, 5) / 5],
-                   random.randrange(0, 360), random.random() / random.choice([-2, 2]), asteroid_image, asteroid_info)
+    global rock_group
+    if len(rock_group) < 12:
+        rock = Sprite([random.randrange(0, WIDTH), random.randrange(0, HEIGHT)],
+                      [random.randrange(-5, 5) / 5, random.randrange(-5, 5) / 5],
+                      random.randrange(0, 360), random.random() / random.choice([-2, 2]), asteroid_image, asteroid_info)
+        rock_group.add(rock)
 
 # initialize frame
 frame = simplegui.create_frame("Asteroids", WIDTH, HEIGHT)
 
 # initialize ship and two sprites
 my_ship = Ship([WIDTH / 2, HEIGHT / 2], [0, 0], 0, ship_image, ship_info)
-a_rock = Sprite([random.randrange(0, WIDTH), random.randrange(0, HEIGHT)],
-                [random.randrange(-5, 5) / 5, random.randrange(-5, 5) / 5],
-                random.randrange(0, 360), random.random() / random.choice([-2, 2]), asteroid_image, asteroid_info)
+rock_group = ([])
+#a_rock = Sprite([random.randrange(0, WIDTH), random.randrange(0, HEIGHT)],
+#                [random.randrange(-5, 5) / 5, random.randrange(-5, 5) / 5],
+#                random.randrange(0, 360), random.random() / random.choice([-2, 2]), asteroid_image, asteroid_info)
 a_missile = Sprite([2 * WIDTH / 3, 2 * HEIGHT / 3], [-1,1], 0, 0, missile_image, missile_info, missile_sound)
 
 # register handlers
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(key_down)
+frame.set_mouseclick_handler(click)
 frame.set_keyup_handler(key_up)
-
 
 timer = simplegui.create_timer(1000.0, rock_spawner)
 
