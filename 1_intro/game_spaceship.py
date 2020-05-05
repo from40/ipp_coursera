@@ -109,6 +109,16 @@ def process_sprite_group(sprite_set, canvas):
         sprite.update()
 
 
+# take a set group and a sprite other_object and check for collisions between other_object and elements of the group
+def group_collide(group, other_object):
+    shadow_group = set(group)
+    for elem in shadow_group:
+        if elem.collide(other_object):
+            group.remove(elem)
+            return True
+    return False
+
+
 # Ship class
 class Ship:
     def __init__(self, pos, vel, angle, image, info):
@@ -148,18 +158,18 @@ class Ship:
         # define acceleration vector and use it during thrust on
         self.forward_vector = angle_to_vector(math.radians(self.angle))
         if self.thrust:
-            self.vel[0] = self.vel[0] + 0.02 * self.forward_vector[0]
-            self.vel[1] = self.vel[1] + 0.02 * self.forward_vector[1]
+            self.vel[0] = self.vel[0] + 0.03 * self.forward_vector[0]
+            self.vel[1] = self.vel[1] + 0.03 * self.forward_vector[1]
 
         # add friction
         self.vel[0] *= (1 - friction_rate)
         self.vel[1] *= (1 - friction_rate)
 
     def turn_right(self):
-        self.angle_vel += 1
+        self.angle_vel += 2
 
     def turn_left(self):
-        self.angle_vel -= 1
+        self.angle_vel -= 2
 
     def thrusters_burst(self, status):
         self.thrust = status
@@ -223,7 +233,7 @@ class Sprite:
 
 
 def draw(canvas):
-    global time
+    global time, lives
 
     # animiate background
     time += 1
@@ -245,6 +255,10 @@ def draw(canvas):
 
     # update and draw sprites (rocks and missles)
     process_sprite_group(rock_group, canvas)
+
+    # to determine if the ship hit any of the rocks
+    if group_collide(rock_group, my_ship):
+        lives -= 1
 
     # draw UI
     canvas.draw_text("Lives: " + str(lives), (60, 30), 30, 'White')
