@@ -62,7 +62,7 @@ ship_info = ImageInfo([45, 45], [90, 90], 35)
 ship_image = simplegui.load_image("http://commondatastorage.googleapis.com/codeskulptor-assets/lathrop/double_ship.png")
 
 # missile image - shot1.png, shot2.png, shot3.png
-missile_info = ImageInfo([5, 5], [10, 10], 3, 50)
+missile_info = ImageInfo([5, 5], [10, 10], 3, 150)
 missile_image = simplegui.load_image("http://commondatastorage.googleapis.com/codeskulptor-assets/lathrop/shot2.png")
 
 # asteroid images - asteroid_blue.png, asteroid_brown.png, asteroid_blend.png
@@ -104,9 +104,11 @@ def dist(p, q):
 
 # helper functions takes a set and a canvas and call the update and draw methods for each sprite in the group
 def process_sprite_group(sprite_set, canvas):
-    for sprite in sprite_set:
+    shadow_set = set(sprite_set)
+    for sprite in shadow_set:
         sprite.draw(canvas)
-        sprite.update()
+        if sprite.update():
+            sprite_set.remove(sprite)
 
 
 # take a set group and a sprite other_object and check for collisions between other_object and elements of the group
@@ -180,11 +182,12 @@ class Ship:
         print(str(status))
 
     def shoot(self):
-        global a_missile
-        a_missile = Sprite(
+        global missile_group
+        missile = Sprite(
             [self.pos[0] + self.radius * self.forward_vector[0], self.pos[1] + self.radius * self.forward_vector[1]],
-            [self.vel[0] + self.forward_vector[0], self.vel[1] + self.forward_vector[1]],
+            [self.vel[0] + self.forward_vector[0] * 2, self.vel[1] + self.forward_vector[1] * 2],
             0, 0, missile_image, missile_info, missile_sound)
+        missile_group.add(missile)
 
 
 # Sprite class
@@ -219,6 +222,11 @@ class Sprite:
         self.pos[0] = (self.pos[0] + self.vel[0]) % WIDTH
         self.pos[1] = (self.pos[1] + self.vel[1]) % HEIGHT
         self.angle += self.angle_vel
+        self.age += 1
+        if self.age >= self.lifespan:
+            return True
+        else:
+            return False
 
     def collide(self, other_object):
         distance_is = dist(self.pos, other_object.get_position())
@@ -247,14 +255,13 @@ def draw(canvas):
 
     # draw ship and sprites
     my_ship.draw(canvas)
-    a_missile.draw(canvas)
 
     # update ship and sprites
     my_ship.update()
-    a_missile.update()
 
     # update and draw sprites (rocks and missles)
     process_sprite_group(rock_group, canvas)
+    process_sprite_group(missile_group, canvas)
 
     # to determine if the ship hit any of the rocks
     if group_collide(rock_group, my_ship):
@@ -333,7 +340,8 @@ timer = simplegui.create_timer(1000.0, rock_spawner)
 # initialize ship and two sprites
 my_ship = Ship([WIDTH / 2, HEIGHT / 2], [0, 0], 0, ship_image, ship_info)
 rock_group = set()
-a_missile = Sprite([2 * WIDTH / 3, 2 * HEIGHT / 3], [-1, 1], 0, 0, missile_image, missile_info, missile_sound)
+missile_group = set()
+# a_missile = Sprite([2 * WIDTH / 3, 2 * HEIGHT / 3], [-1, 1], 0, 0, missile_image, missile_info, missile_sound)
 
 # get things rolling
 timer.start()
