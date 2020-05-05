@@ -78,6 +78,8 @@ explosion_image = simplegui.load_image(
 # sound assets purchased from sounddogs.com, please do not redistribute
 soundtrack = simplegui.load_sound(
     "http://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/soundtrack.mp3")
+soundtrack2 = simplegui.load_sound(
+    "https://storage.googleapis.com/codeskulptor-assets/ricerocks_theme.mp3")
 missile_sound = simplegui.load_sound(
     "http://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/missile.mp3")
 missile_sound.set_volume(.4)
@@ -89,7 +91,7 @@ explosion_sound = simplegui.load_sound(
 
 # alternative upbeat soundtrack by composer and former IIPP student Emiel Stopler
 # please do not redistribute without permission from Emiel at http://www.filmcomposer.nl
-# soundtrack = simplegui.load_sound("https://storage.googleapis.com/codeskulptor-assets/ricerocks_theme.mp3")
+
 
 
 # helper functions to handle transformations
@@ -284,7 +286,6 @@ def draw(canvas):
         score = 0
         rock_group = set()
         missile_group = set()
-        soundtrack.rewind()
 
     # draw UI
     canvas.draw_text("Lives: " + str(lives), (60, 30), 30, 'White')
@@ -296,6 +297,7 @@ def draw(canvas):
                           splash_info.get_size(), [WIDTH / 2, HEIGHT / 2],
                           splash_info.get_size())
         timer.stop()
+        soundtrack2.play()
 
 
 # dismiss the splash screen image (in the start of the game) with a mouse click
@@ -308,6 +310,8 @@ def click(pos):
     if (not started) and inwidth and inheight:
         started = True
         timer.start()
+        soundtrack2.rewind()
+        soundtrack.rewind()
         soundtrack.play()
 
 
@@ -344,10 +348,16 @@ def rock_spawner():
     global rock_group
     if len(rock_group) < 12:
         rock = Sprite([random.randrange(0, WIDTH), random.randrange(0, HEIGHT)],
-                      [random.randrange(-5, 5) / 5, random.randrange(-5, 5) / 5],
+                      [random.randrange(-7, 7) / 5, random.randrange(-7, 7) / 5],
                       random.randrange(0, 360), random.random() / random.choice([-2, 2]),
                       asteroid_image, asteroid_info)
-        rock_group.add(rock)
+        rock_position = rock.get_position()
+        my_ship_position = my_ship.get_position()
+        if (my_ship_position[0] - 200) < rock_position[0] < (my_ship_position[0] + 200) and \
+           (my_ship_position[1] + 200) < rock_position[0] < (my_ship_position[1] + 200):
+            pass
+        else:
+            rock_group.add(rock)
 
 
 # initialize frame
@@ -367,3 +377,4 @@ missile_group = set()
 
 # get things rolling
 frame.start()
+soundtrack2.play()
