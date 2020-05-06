@@ -13,6 +13,9 @@ friction_rate = 0.005
 started = False
 
 
+# Game state class
+# game = Game(xxxxxx)
+
 class ImageInfo:
     def __init__(self, center, size, radius=0, lifespan=None, animated=False):
         self.center = center
@@ -93,19 +96,23 @@ explosion_sound = simplegui.load_sound(
 # please do not redistribute without permission from Emiel at http://www.filmcomposer.nl
 
 
-
 # helper functions to handle transformations
 def angle_to_vector(ang):
     return [math.cos(ang), math.sin(ang)]
 
 
-# helper functions to calculate distance between two points in 2D
 def dist(p, q):
+    """
+    helper function to calculate distance between two points in 2D
+    """
     return math.sqrt((p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2)
 
 
-# helper functions takes a set and a canvas and call the update and draw methods for each sprite in the group
 def process_sprite_group(sprite_set, canvas):
+    """
+    helper function takes a set and a canvas and call the update and draw methods
+    for each sprite in the group
+    """
     shadow_set = set(sprite_set)
     for sprite in shadow_set:
         sprite.draw(canvas)
@@ -118,6 +125,9 @@ def group_collide(group, other_object):
     shadow_group = set(group)
     for elem in shadow_group:
         if elem.collide(other_object):
+            new_explosion = Sprite(elem.get_position(), [0, 0], 0, 0,
+                                   explosion_image, explosion_info, explosion_sound)
+            explosion_group.add(new_explosion)
             group.remove(elem)
             return True
     return False
@@ -227,8 +237,12 @@ class Sprite:
         return self.radius
 
     def draw(self, canvas):
+        if self.animated:
+            image_tile = (self.age % 20) // 1
+            self.image_center = [self.image_center[0] + image_tile * self.image_size[0],
+                                 self.image_center[1]]
         canvas.draw_image(self.image, self.image_center, self.image_size,
-                          self.pos, self.image_size, math.radians(self.angle))
+                              self.pos, self.image_size, math.radians(self.angle))
 
     def update(self):
         self.pos[0] = (self.pos[0] + self.vel[0]) % WIDTH
@@ -250,7 +264,7 @@ class Sprite:
 
 
 def draw(canvas):
-    global time, lives, score, started, rock_group, missile_group
+    global time, lives, score, started, rock_group, missile_group, explosion_group
 
     # animiate background
     time += 1
@@ -268,9 +282,10 @@ def draw(canvas):
     # update ship and sprites
     my_ship.update()
 
-    # update and draw sprites (rocks and missles)
+    # update and draw sprites (rocks, missles and explosions)
     process_sprite_group(rock_group, canvas)
     process_sprite_group(missile_group, canvas)
+    process_sprite_group(explosion_group, canvas)
 
     # to determine if the ship hit any of the rocks
     if group_collide(rock_group, my_ship):
@@ -286,6 +301,7 @@ def draw(canvas):
         score = 0
         rock_group = set()
         missile_group = set()
+        explosion_group = set()
 
     # draw UI
     canvas.draw_text("Lives: " + str(lives), (60, 30), 30, 'White')
@@ -347,14 +363,14 @@ def key_up(key):
 def rock_spawner():
     global rock_group
     if len(rock_group) < 12:
-        rock = Sprite([random.randrange(0, WIDTH), random.randrange(0, HEIGHT)],
+        rock = Sprite([random.random() * WIDTH, random.random() * HEIGHT],
                       [random.randrange(-7, 7) / 5, random.randrange(-7, 7) / 5],
                       random.randrange(0, 360), random.random() / random.choice([-2, 2]),
                       asteroid_image, asteroid_info)
         rock_position = rock.get_position()
         my_ship_position = my_ship.get_position()
-        if (my_ship_position[0] - 250) < rock_position[0] < (my_ship_position[0] + 250) and \
-           (my_ship_position[1] + 250) < rock_position[0] < (my_ship_position[1] + 250):
+        if (my_ship_position[0] - 250) < rock_position[0] < (my_ship_position[0] + 250) or \
+                (my_ship_position[1] + 250) < rock_position[0] < (my_ship_position[1] + 250):
             pass
         else:
             rock_group.add(rock)
@@ -374,6 +390,7 @@ timer = simplegui.create_timer(1000.0, rock_spawner)
 my_ship = Ship([WIDTH / 2, HEIGHT / 2], [0, 0], 0, ship_image, ship_info)
 rock_group = set()
 missile_group = set()
+explosion_group = set()
 
 # get things rolling
 frame.start()
