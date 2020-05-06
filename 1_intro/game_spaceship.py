@@ -353,8 +353,8 @@ def rock_spawner():
                       asteroid_image, asteroid_info)
         rock_position = rock.get_position()
         my_ship_position = my_ship.get_position()
-        if (my_ship_position[0] - 200) < rock_position[0] < (my_ship_position[0] + 200) and \
-           (my_ship_position[1] + 200) < rock_position[0] < (my_ship_position[1] + 200):
+        if (my_ship_position[0] - 250) < rock_position[0] < (my_ship_position[0] + 250) and \
+           (my_ship_position[1] + 250) < rock_position[0] < (my_ship_position[1] + 250):
             pass
         else:
             rock_group.add(rock)
