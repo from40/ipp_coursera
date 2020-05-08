@@ -6,9 +6,18 @@ Goal: Move as many seeds from given houses into the store
 In GUI, you make ask computer AI to make move or click to attempt a legal move
 """
 
+import SolitaireMancala_testsuite_01 as testsuite
 
 class SolitaireMancala:
+    """
+    Models the current configuration of a game of Solitaire Mancala
+    and provide several methods for analyzing and updating the game
+    """
     def __init__(self):
+        """
+        Initiate object of class Solitaire Mancala
+        with 1 empty "store" and 6 empty "houses"
+        """
         self.board = [0, 0, 0, 0, 0, 0, 0]
 
     def __str__(self):
@@ -21,10 +30,16 @@ class SolitaireMancala:
                str(self.board[6])
 
     def set_board(self, configuration):
+        """
+        puts numbers of seeds in store/houses according given "configuration" parameter
+        """
         for i in range(len(configuration)):
             self.board[i] = configuration[i]
 
     def get_num_seeds(self, house_num):
+        """
+        returns number of seeds in defined by parameter house
+        """
         return self.board[house_num]
 
     def is_legal_move(self, house_num):
@@ -67,8 +82,12 @@ class SolitaireMancala:
         self.board = self.shadow_board
         return self.moves_plan
 
-# Create tests to check the correctness of your code
 
+if __name__ == '__main__':
+    pass
+
+
+# Create tests to check the correctness of your code
 def test_mancala():
     """
     Test code for Solitaire Mancala
@@ -78,7 +97,6 @@ def test_mancala():
     print("__init__. # Initialize Mancala game with empty board")
     print("Testing init - Expected: 0, 0, 0, 0, 0, 0, 0")
     print("Testing init - Computed:", my_game, "\n")
-
 
     # test set_board()
     config1 = [0, 0, 1, 1, 3, 5, 0]
@@ -128,10 +146,10 @@ def test_mancala():
     print("Testing choose_move - Computed:", my_game.choose_move())
 
 
-
-#test_mancala()
-
+# test_mancala()
 
 # Import GUI code once you feel your code is correct
-import poc_mancala_gui
-poc_mancala_gui.run_gui(SolitaireMancala())
+# import poc_mancala_gui
+# poc_mancala_gui.run_gui(SolitaireMancala())
+
+ testsuite.run_suite(SolitaireMancala)
