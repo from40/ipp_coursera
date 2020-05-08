@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Student facing implement of solitaire version of Mancala - Tchoukaillon
 
@@ -6,7 +8,9 @@ Goal: Move as many seeds from given houses into the store
 In GUI, you make ask computer AI to make move or click to attempt a legal move
 """
 
-import SolitaireMancala_testsuite_01 as testsuite
+import random
+import solitaire_mancala_testsuite_01 as testsuite
+
 
 class SolitaireMancala:
     """
@@ -17,6 +21,7 @@ class SolitaireMancala:
         """
         Initiate object of class Solitaire Mancala
         with 1 empty "store" and 6 empty "houses"
+        where board[0] - is Store
         """
         self.board = [0, 0, 0, 0, 0, 0, 0]
 
@@ -31,7 +36,8 @@ class SolitaireMancala:
 
     def set_board(self, configuration):
         """
-        puts numbers of seeds in store/houses according given "configuration" parameter
+        puts numbers of seeds in store/houses
+        according given "configuration" parameter
         """
         for i in range(len(configuration)):
             self.board[i] = configuration[i]
@@ -83,8 +89,9 @@ class SolitaireMancala:
         return self.moves_plan
 
 
+# test for SolitaireMancala class
 if __name__ == '__main__':
-    pass
+    testsuite.run_suite(SolitaireMancala)
 
 
 # Create tests to check the correctness of your code
@@ -146,10 +153,3 @@ def test_mancala():
     print("Testing choose_move - Computed:", my_game.choose_move())
 
 
-# test_mancala()
-
-# Import GUI code once you feel your code is correct
-# import poc_mancala_gui
-# poc_mancala_gui.run_gui(SolitaireMancala())
-
- testsuite.run_suite(SolitaireMancala)
