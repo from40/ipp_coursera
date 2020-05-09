@@ -5,6 +5,7 @@ Clone of 2048 game.
 """
 
 # import poc_2048_gui
+import random
 import sys
 sys.path.append('2048')
 import game_2048_testsuite as testsuite
@@ -62,6 +63,8 @@ class TwentyFortyEight:
         """
         self.grid = [[0 for dummy_column in range(self.width)]
                      for dummy_row in range(self.height)]
+        self.new_tile()
+        self.new_tile()
 
     def __str__(self):
         """
@@ -76,15 +79,14 @@ class TwentyFortyEight:
         """
         Get the height of the board.
         """
-        # replace with your code
-        return 0
+        return self.height
+
 
     def get_grid_width(self):
         """
         Get the width of the board.
         """
-        # replace with your code
-        return 0
+        return self.width
 
     def move(self, direction):
         """
@@ -100,22 +102,28 @@ class TwentyFortyEight:
         square.  The tile should be 2 90% of the time and
         4 10% of the time.
         """
-        # replace with your code
-        pass
+        if random.randint(0, 100) < 90:
+            new_tile = 2
+        else:
+            new_tile = 4
+        row = random.randrange(self.height)
+        col = random.randrange(self.width)
+        while self.grid[row][col] != 0:
+            row = random.randrange(self.height)
+            col = random.randrange(self.width)
+        self.set_tile(row, col, new_tile)
 
     def set_tile(self, row, col, value):
         """
         Set the tile at position row, col to have the given value.
         """
-        # replace with your code
-        pass
+        self.grid[row][col] = value
 
     def get_tile(self, row, col):
         """
         Return the value of the tile at position row, col.
         """
-        # replace with your code
-        return 0
+        return self.grid[row][col]
 
 
 # test for TwentyFortyEight class

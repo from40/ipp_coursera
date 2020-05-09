@@ -16,7 +16,7 @@ def run_test(user_class):
     suite = poc_simpletest.Testsuite()
 
     # create a game
-    game = user_class(4, 4)
+    game = user_class(3, 3)
 
     # add basic default output
     empty_grid = [[0 for dummy_column in range(4)] for dummy_row in range(4)]
