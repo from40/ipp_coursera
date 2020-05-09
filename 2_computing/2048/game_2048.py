@@ -52,32 +52,32 @@ class TwentyFortyEight:
 
     def __init__(self, grid_height, grid_width):
         self._height = grid_height
-        self.width = grid_width
-        self.grid = []
+        self._width = grid_width
+        self._grid = []
         self.reset()
         up_list = []
         down_list = []
-        for ind in range(self.width):
+        for ind in range(self._width):
             up_list.append([0, ind])
             down_list.append([self._height - 1, ind])
         left_list = []
         right_list = []
         for ind in range(self._height):
             left_list.append([ind, 0])
-            right_list.append([ind, self.width - 1])
-        self.initial_indices = {1: up_list,
-                                2: down_list,
-                                3: left_list,
-                                4: right_list,
+            right_list.append([ind, self._width - 1])
+        self._initial_indices = {1: up_list,
+                                 2: down_list,
+                                 3: left_list,
+                                 4: right_list,
                                 }
-        print(self.initial_indices)
+        print(self._initial_indices)
 
     def reset(self):
         """
         Reset the game so the grid is empty except for two
         initial tiles.
         """
-        self.grid = [[0 for dummy_column in range(self.width)]
+        self._grid = [[0 for dummy_column in range(self._width)]
                      for dummy_row in range(self._height)]
         self.new_tile()
         self.new_tile()
@@ -86,9 +86,10 @@ class TwentyFortyEight:
         """
         Return a string representation of the grid for debugging.
         """
-        msg = ""
+        msg = "["
         for row in range(self._height):
-            msg += str(self.grid[row])
+            msg += str(self._grid[row])
+        msg += "]"
         return msg
 
     def get_grid_height(self):
@@ -101,28 +102,33 @@ class TwentyFortyEight:
         """
         Get the width of the board.
         """
-        return self.width
+        return self._width
 
     def move(self, direction):
         """
         Move all tiles in the given direction and add
         a new tile if any tiles moved.
         """
-        for pos in self.initial_indices[direction]:
+        grid_change = False
+        for pos in self._initial_indices[direction]:
             temp_list = []
             for step in range(self._height):
                 row = pos[0] + step * OFFSETS[direction][0]
                 col = pos[1] + step * OFFSETS[direction][1]
-                temp_list.append(self.grid[row][col])
+                temp_list.append(self._grid[row][col])
             temp = merge(temp_list)
             for step in range(self._height):
                 row = pos[0] + step * OFFSETS[direction][0]
                 col = pos[1] + step * OFFSETS[direction][1]
-                self.grid[row][col] = temp[step]
-        msg = ""
-        for row in range(self._height):
-            msg += str(self.grid[row])
-        return msg
+                if temp[step] != self._grid[row][col]:
+                    grid_change = True
+                self._grid[row][col] = temp[step]
+        if grid_change:
+            self.new_tile()
+        #msg = ""
+        #for row in range(self._height):
+        #    msg += str(self._grid[row])
+        #return msg
 
     def new_tile(self):
         """
@@ -135,23 +141,23 @@ class TwentyFortyEight:
         else:
             new_tile = 4
         row = random.randrange(self._height)
-        col = random.randrange(self.width)
-        while self.grid[row][col] != 0:
+        col = random.randrange(self._width)
+        while self._grid[row][col] != 0:
             row = random.randrange(self._height)
-            col = random.randrange(self.width)
+            col = random.randrange(self._width)
         self.set_tile(row, col, new_tile)
 
     def set_tile(self, row, col, value):
         """
         Set the tile at position row, col to have the given value.
         """
-        self.grid[row][col] = value
+        self._grid[row][col] = value
 
     def get_tile(self, row, col):
         """
         Return the value of the tile at position row, col.
         """
-        return self.grid[row][col]
+        return self._grid[row][col]
 
 
 # test for TwentyFortyEight class
