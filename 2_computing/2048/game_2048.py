@@ -51,10 +51,26 @@ class TwentyFortyEight:
     """
 
     def __init__(self, grid_height, grid_width):
-        self.height = grid_height
+        self._height = grid_height
         self.width = grid_width
         self.grid = []
         self.reset()
+        up_list = []
+        down_list = []
+        for ind in range(self.width):
+            up_list.append([0, ind])
+            down_list.append([self._height - 1, ind])
+        left_list = []
+        right_list = []
+        for ind in range(self._height):
+            left_list.append([ind, 0])
+            right_list.append([ind, self.width - 1])
+        self.initial_indices = {1: up_list,
+                                2: down_list,
+                                3: left_list,
+                                4: right_list,
+                                }
+        print(self.initial_indices)
 
     def reset(self):
         """
@@ -62,7 +78,7 @@ class TwentyFortyEight:
         initial tiles.
         """
         self.grid = [[0 for dummy_column in range(self.width)]
-                     for dummy_row in range(self.height)]
+                     for dummy_row in range(self._height)]
         self.new_tile()
         self.new_tile()
 
@@ -71,7 +87,7 @@ class TwentyFortyEight:
         Return a string representation of the grid for debugging.
         """
         msg = ""
-        for row in range(self.height):
+        for row in range(self._height):
             msg += str(self.grid[row])
         return msg
 
@@ -79,8 +95,7 @@ class TwentyFortyEight:
         """
         Get the height of the board.
         """
-        return self.height
-
+        return self._height
 
     def get_grid_width(self):
         """
@@ -93,8 +108,21 @@ class TwentyFortyEight:
         Move all tiles in the given direction and add
         a new tile if any tiles moved.
         """
-        # replace with your code
-        pass
+        for pos in self.initial_indices[direction]:
+            temp_list = []
+            for step in range(self._height):
+                row = pos[0] + step * OFFSETS[direction][0]
+                col = pos[1] + step * OFFSETS[direction][1]
+                temp_list.append(self.grid[row][col])
+            temp = merge(temp_list)
+            for step in range(self._height):
+                row = pos[0] + step * OFFSETS[direction][0]
+                col = pos[1] + step * OFFSETS[direction][1]
+                self.grid[row][col] = temp[step]
+        msg = ""
+        for row in range(self._height):
+            msg += str(self.grid[row])
+        return msg
 
     def new_tile(self):
         """
@@ -106,10 +134,10 @@ class TwentyFortyEight:
             new_tile = 2
         else:
             new_tile = 4
-        row = random.randrange(self.height)
+        row = random.randrange(self._height)
         col = random.randrange(self.width)
         while self.grid[row][col] != 0:
-            row = random.randrange(self.height)
+            row = random.randrange(self._height)
             col = random.randrange(self.width)
         self.set_tile(row, col, new_tile)
 

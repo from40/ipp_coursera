@@ -16,16 +16,17 @@ def run_test(user_class):
     suite = poc_simpletest.Testsuite()
 
     # create a game
-    game = user_class(3, 3)
+    game = user_class(4, 4)
 
     # add basic default output
-    empty_grid = [[0 for dummy_column in range(4)] for dummy_row in range(4)]
-    empty_grid_msg = ""
-    for elem in empty_grid:
-        empty_grid_msg += str(elem)
+    init_grid = [[0 for dummy_column in range(4)] for dummy_row in range(4)]
+    init_grid_msg = ""
+    for elem in init_grid:
+        init_grid_msg += str(elem)
 
     # add tests using suite.run_test(....)
-    suite.run_test(str(game), empty_grid_msg, "Test #01: Reset().\n")
+    suite.run_test(str(game), init_grid_msg, "Test #01: Reset().\n")
+    suite.run_test(game.move(3), str([0, 1]), "Test #02: Move().\n")
 
     # report number of tests and failures
     suite.report_results()
