@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+# https://py3.codeskulptor.org/#user305_nv0JPAdEjIR2tyk.py
 """
 Clone of 2048 game.
 """
@@ -55,6 +55,7 @@ class TwentyFortyEight:
         self._width = grid_width
         self._grid = []
         self.reset()
+
         up_list = []
         down_list = []
         for ind in range(self._width):
@@ -65,11 +66,11 @@ class TwentyFortyEight:
         for ind in range(self._height):
             left_list.append([ind, 0])
             right_list.append([ind, self._width - 1])
-        self._initial_indices = {1: up_list,
-                                 2: down_list,
-                                 3: left_list,
-                                 4: right_list,
-                                }
+        self._initial_indices = {UP: up_list,
+                                 DOWN: down_list,
+                                 LEFT: left_list,
+                                 RIGHT: right_list,
+                                 }
         print(self._initial_indices)
 
     def reset(self):
@@ -77,8 +78,7 @@ class TwentyFortyEight:
         Reset the game so the grid is empty except for two
         initial tiles.
         """
-        self._grid = [[0 for dummy_column in range(self._width)]
-                     for dummy_row in range(self._height)]
+        self._grid = [[0 for dummy_column in range(self._width)] for dummy_row in range(self._height)]
         self.new_tile()
         self.new_tile()
 
@@ -110,14 +110,18 @@ class TwentyFortyEight:
         a new tile if any tiles moved.
         """
         grid_change = False
+        if direction in (UP, DOWN):
+            steps = self._height
+        if direction in (LEFT, RIGHT):
+            steps = self._width
         for pos in self._initial_indices[direction]:
             temp_list = []
-            for step in range(self._height):
+            for step in range(steps):
                 row = pos[0] + step * OFFSETS[direction][0]
                 col = pos[1] + step * OFFSETS[direction][1]
                 temp_list.append(self._grid[row][col])
             temp = merge(temp_list)
-            for step in range(self._height):
+            for step in range(steps):
                 row = pos[0] + step * OFFSETS[direction][0]
                 col = pos[1] + step * OFFSETS[direction][1]
                 if temp[step] != self._grid[row][col]:
