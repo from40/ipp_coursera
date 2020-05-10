@@ -26,7 +26,7 @@ def format(t):
     time_list[2] = str(b)
     time_list[3] = str(c)
     time_list[5] = str(d)
-    return("".join(time_list))
+    return "".join(time_list)
 
 
 # define event handlers for buttons; "Start", "Stop", "Reset"
