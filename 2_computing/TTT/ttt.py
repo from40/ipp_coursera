@@ -20,6 +20,8 @@ def create_board(dim):
     first_player = provided.PLAYERX
     mc_trial(board, first_player)
     mc_update_scores(scores, board, first_player)
+    get_best_move(board, scores)
+
 
 def mc_trial(board, player):
     """
@@ -59,6 +61,32 @@ def mc_update_scores(scores, board, player):
                 else:
                     scores[raw][col] = multi_other * SCORE_OTHER
     print(scores)
+
+
+def get_best_move(board, scores):
+    board_empty_squares = board.get_empty_squares()
+
+    best_score = float("-inf")
+    for square in board_empty_squares:
+        if scores[square[0]][square[1]] >= best_score:
+            best_score = scores[square[0]][square[1]]
+
+    best_moves = []
+    for square in board_empty_squares:
+        if scores[square[0]][square[1]] == best_score:
+            best_moves.append(square)
+    return random.choice(best_moves)
+
+
+def mc_move(board, player, trials):
+    dim = board.get_dim()
+    scores = [[0 for col in range(dim)] for row in range(dim)]
+    for trial in range(trials):
+        shadow_board = board
+        shadow_player = player
+        mc_trial(shadow_board, shadow_player)
+        mc_update_scores(scores, shadow_board, shadow_player)
+    return get_best_move(board, scores)
 
 
 create_board(3)
