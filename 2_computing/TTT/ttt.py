@@ -1,26 +1,16 @@
 """
 Monte Carlo Tic-Tac-Toe Player
+Submitted version: http://www.codeskulptor.org/#user47_PdIVJXWuMRY39lf.py
 """
 
 import random
 import poc_ttt_gui
 import poc_ttt_provided as provided
 
-# Constants for Monte Carlo simulator
-# You may change the values of these constants as desired, but
-# do not change their names.
-NTRIALS = 1  # Number of trials to run
+
+NTRIALS = 15  # Number of trials to run
 SCORE_CURRENT = 1.0  # Score for squares played by the current player
 SCORE_OTHER = 1.0  # Score for squares played by the other player
-
-
-def create_board(dim):
-    board = provided.TTTBoard(dim)
-    scores = [[0 for col in range(dim)] for row in range(dim)]
-    first_player = provided.PLAYERX
-    mc_trial(board, first_player)
-    mc_update_scores(scores, board, first_player)
-    get_best_move(board, scores)
 
 
 def mc_trial(board, player):
@@ -34,12 +24,15 @@ def mc_trial(board, player):
         square = random.choice(board.get_empty_squares())
         board.move(square[0], square[1], current_player)
         if board.check_win() is not None:
-            print(str(board))
+            # print "\nTrial result:\n", str(board)
             break
         current_player = provided.switch_player(current_player)
 
 
 def mc_update_scores(scores, board, player):
+    """
+    Updated scores based on each NTRIAL results
+    """
     winner = board.check_win()
     if winner == provided.DRAW:
         multi_current = 0
@@ -57,13 +50,17 @@ def mc_update_scores(scores, board, player):
                 pass
             else:
                 if board.square(raw, col) == player:
-                    scores[raw][col] = multi_current * SCORE_CURRENT
+                    scores[raw][col] = scores[raw][col] + multi_current * SCORE_CURRENT
                 else:
-                    scores[raw][col] = multi_other * SCORE_OTHER
-    print(scores)
+                    scores[raw][col] = scores[raw][col] + multi_other * SCORE_OTHER
+    # print "Updated scores\n", scores, "\n\n"
 
 
 def get_best_move(board, scores):
+    """
+    Randomly choose from best possible moves one
+    and return its coordinates on the board
+    """
     board_empty_squares = board.get_empty_squares()
 
     best_score = float("-inf")
@@ -75,24 +72,27 @@ def get_best_move(board, scores):
     for square in board_empty_squares:
         if scores[square[0]][square[1]] == best_score:
             best_moves.append(square)
+    # print "Best moves", best_moves, "\n\n"
     return random.choice(best_moves)
 
 
 def mc_move(board, player, trials):
+    """
+    Initiate next player move
+    """
     dim = board.get_dim()
-    scores = [[0 for col in range(dim)] for row in range(dim)]
-    for trial in range(trials):
-        shadow_board = board
-        shadow_player = player
+    scores = [[0 for dummy_col in range(dim)] for dummy_row in range(dim)]
+    # print "Start series of trials for next move choice.\n", board
+    for dummy_trial in range(trials):
+        shadow_board = board.clone()
+        shadow_player = int(player)
         mc_trial(shadow_board, shadow_player)
         mc_update_scores(scores, shadow_board, shadow_player)
     return get_best_move(board, scores)
 
 
-create_board(3)
-
-
+# create_board(3)
 # Test game with the console or the GUI.  Uncomment whichever
 # you prefer.  Both should be commented out when you submit
 # for testing to save time.
-#provided.play_game(mc_move, NTRIALS, False)
+provided.play_game(mc_move, NTRIALS, False)
